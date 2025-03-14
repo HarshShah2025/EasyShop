@@ -2,13 +2,13 @@ FROM node:18 as builder
 
 WORKDIR /app
 
-COPY . .
+RUN apk add --no-cache python3 make g++
 
 COPY package.json .
 
-RUN apk add --no-cache python3 make g++
+RUN npm install
 
-RUN npm ci
+COPY . .
 
 RUN npm run build
 
