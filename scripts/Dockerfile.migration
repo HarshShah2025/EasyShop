@@ -22,5 +22,5 @@ RUN npm install --save-dev @types/mongoose
 ENV NODE_ENV=development
 
 ## Command to run migration
-CMD ["npx", "ts-node", "--project", "scripts/tsconfig.json", "scripts/migrate-data.ts"]
+CMD ["npx", "ts-node", "--project", "./tsconfig.json", "scripts/migrate-data.ts"]
                                                                                                 
