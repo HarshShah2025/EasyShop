@@ -1,0 +1,37 @@
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: easy-mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - easy-network
+    volumes:
+      - ./easy-db:/data/db
+
+
+
+  easyapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: easyapp
+    ports:
+      - "3000:3000"
+    networks:
+      - easy-network
+
+    depends_on:
+      - mongodb
+
+networks:
+  easy-network:
+
+volumes:
+  easy-db:
+
+
+
+
+~                                         
