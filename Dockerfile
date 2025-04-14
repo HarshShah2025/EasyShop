@@ -1,29 +1,41 @@
+## Stage1
+
+## Base image for builder
 FROM node:18-alpine AS builder
 
-WORKDIR /app
+## Create a working directory
+WORKDIR /project
 
-RUN apk add --no-cache python3 make g++
+## install the required dependencies 
+COPY package*.json ./
+RUN npm install --include=dev
 
-COPY package.json .
 
-RUN npm install
-
+## Copy source code
 COPY . .
 
+## Build node.js app
 RUN npm run build
 
-FROM node:18-alpine
+## Production Stage
 
-WORKDIR /app
+## Base image
+FROM node:18-alpine AS runner
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+## Create working directory
+WORKDIR /project
+
+## Copy the requirements from builder
+COPY --from=builder /project ./
+
+
+## set the environment variable
 
 ENV NODE_ENV=production
-ENV PORT=3000
 
+## Expose the port
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+## Serve the app
+CMD ["npm", "start"]
 
