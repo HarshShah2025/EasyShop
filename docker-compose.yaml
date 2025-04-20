@@ -20,7 +20,7 @@ services:
   migration:
     build:
       context: .
-      dockerfile: scripts/Dockerfile.migration
+      dockerfile: scripts/Dockerfile-migration
     container_name: easymigration
     env_file:
       - .env
