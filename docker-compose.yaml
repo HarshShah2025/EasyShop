@@ -9,8 +9,26 @@ services:
       - easy-network
     volumes:
       - ./easy-db:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 
+  migration:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile.migration
+    container_name: easymigration
+    env_file:
+      - .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - easy-network
 
   easyapp:
     build:
@@ -19,11 +37,16 @@ services:
     container_name: easyapp
     ports:
       - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+    restart: always
+
     networks:
       - easy-network
 
-    depends_on:
-      - mongodb
 
 networks:
   easy-network:
@@ -31,7 +54,3 @@ networks:
 volumes:
   easy-db:
 
-
-
-
-~                                         
