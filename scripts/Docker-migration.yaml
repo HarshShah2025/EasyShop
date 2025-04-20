@@ -1,0 +1,36 @@
+##Base image
+FROM node:18-alpine AS builder
+
+## Create working directory
+WORKDIR /app
+
+## install the required dependencies 
+COPY package*.json tsconfig.json ./
+RUN npm install --include=dev
+RUN npm install --save-dev @types/mongoose
+
+## Copy the requirements
+COPY ./scripts ./scripts
+COPY .db ./db
+
+## STAGE-2
+
+## Build image
+FROM node:18-alpine AS runner
+
+## Copy dependency from builder stage
+COPY --from=builder /app ./
+
+## Environment Setup
+
+ENV NODE_ENV=development
+
+## Serve and run the module
+CMD ["npx", "ts.node", "scripts/tsconfig.json", "scripts/migrate-data.ts"]
+
+
+~                                                                                                                                                                                                                                                                     
+~                                                                                                                                                                                                                                                                     
+~                                                                                                                                                                                                                                                                     
+~                                                                                                                                                                                                                                                                     
+~                                                                                                
