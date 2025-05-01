@@ -1,6 +1,10 @@
 pipeline {
     agent any
     
+     environment{
+        SONAR_HOME = tool "Sonar"
+    }
+    
     stages {
         stage("clean workspace") {
             steps {
@@ -32,6 +36,22 @@ pipeline {
                  sh "trivy fs . -o result.json"
             }
         }
+        stage("OWASP dependency check") {
+            steps {
+                 dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'OWASP'
+                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage("sonarQube: code analysis"){
+            steps {
+                 withSonarQubeEnv("Sonar") {
+                     sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=easyapp -Dsonar.projectKey=easyapp -X"
+                 }
+            }
+           
+        }
+         
+       
         stage("image push") {
             steps {
                 withCredentials([usernamePassword(
