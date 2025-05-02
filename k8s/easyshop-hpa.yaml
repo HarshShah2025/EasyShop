@@ -3,7 +3,7 @@ apiVersion: autoscaling/v2
 
 metadata:
   name: easyshop-hpa
-  namespace: easyshop-ns
+  namespace: easyshop-namespace
 
 spec: 
   scaleTargetRef: 
