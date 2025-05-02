@@ -3,7 +3,7 @@ apiVersion: apps/v1
 
 metadata:
   name: easyshop-deployment
-  namespace: easyshop-ns
+  namespace: easyshop-namespace
  
 spec:
   replicas: 2
