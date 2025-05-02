@@ -3,7 +3,7 @@ apiVersion: v1
 
 metadata:
   name: easyshop-svc
-  namespace: easyshop-ns
+  namespace: easyshop-namespace
 
 spec:
   selector:
